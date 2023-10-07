@@ -12,12 +12,12 @@ export default class GenerateCommand implements CliCommandInterface {
     const [count, filepath, url] = parameters;
     const offerCount = Number.parseInt(count, 10);
     try {
-        const response = await fetch(url);
-        if (response.ok) {
-          this.initialData = await response.json() as MockData;
-        } else {
-          throw new Error('Failed to fetch data');
-        }
+      const response = await fetch(url);
+      if (response.ok) {
+        this.initialData = await response.json() as MockData;
+      } else {
+        throw new Error('Failed to fetch data');
+      }
     } catch {
       console.log(`Can't get data from ${url}`);
     }
