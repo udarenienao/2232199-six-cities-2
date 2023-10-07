@@ -1,16 +1,20 @@
 import {CliCommandInterface} from './cli-command.js';
-import TSVFileReader from '../file-reader/tsv-file-reader.js';
+import FileReader from '../file-helpers/file-reader.js';
 import chalk from 'chalk';
+import { parseOffer } from '../helpers/offers.js';
 
 export default class ImportCommand implements CliCommandInterface {
   public readonly name = '--import';
 
-  public execute(filename: string): void {
-    const fileReader = new TSVFileReader(filename.trim());
-
+  public async execute(filename: string): Promise<void> {
+    const fileReader = new FileReader(filename.trim());
+    fileReader.on('row', (line: string) => {
+      const offer = parseOffer(line);
+      console.log(offer);
+    });
+    fileReader.on('end', (count: number) => console.log(`${count} rows successfully imported`));
     try {
-      fileReader.read();
-      console.log(fileReader.parseData());
+      await fileReader.read();
     } catch (err) {
       console.log(`${chalk.redBright(`ERROR! Can't read the file: ${(err as Error).message}`)}`);
     }
