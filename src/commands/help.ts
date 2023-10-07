@@ -8,7 +8,7 @@ export default class HelpCommand implements CliCommandInterface {
     console.log(`
         ${chalk.bgGreen('Программа для подготовки данных для REST API сервера.')}
         Пример:
-            ts-node main.cli.ts ${chalk.cyanBright('--<command>')} ${chalk.blueBright('[--arguments]')}
+        npm run cli -- ${chalk.cyanBright('--<command>')} ${chalk.blueBright('[--arguments]')}
          ${chalk.bold('Команды')}
               ${chalk.greenBright('--version:')}                  ${chalk.bgGreen('# выводит номер версии')}
               ${chalk.greenBright('--help:')}                     ${chalk.bgGreen('# печатает этот текст')}
