@@ -1,4 +1,5 @@
 import {createWriteStream, WriteStream} from 'node:fs';
+import os from 'os';
 
 export default class FileWriter {
   private stream: WriteStream;
@@ -13,7 +14,7 @@ export default class FileWriter {
   }
 
   public async write(row: string): Promise<void> {
-    if (this.stream.write(`${row}\n`)) {
+    if (this.stream.write(`${row}${os.EOL}`)) {
       return Promise.resolve();
     } else {
       return new Promise((resolve) => {
