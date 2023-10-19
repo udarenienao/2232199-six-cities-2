@@ -1,3 +1,9 @@
+
+export enum UserType {
+    simple,
+    pro
+  }
+
 export type User = {
   name: string;
   email: string;
@@ -6,7 +12,3 @@ export type User = {
   type : UserType;
 }
 
-export enum UserType {
-    simple,
-    pro
-  }
