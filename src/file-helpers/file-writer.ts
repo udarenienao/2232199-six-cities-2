@@ -1,5 +1,5 @@
 import {createWriteStream, WriteStream} from 'node:fs';
-import os from 'os';
+import os from 'node:os';
 
 export default class FileWriter {
   private stream: WriteStream;
