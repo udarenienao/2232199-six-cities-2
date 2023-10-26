@@ -8,7 +8,7 @@ import { createOfferContainer } from './modules/offer/container.js';
 
 
 const mainContainer = Container.merge(
-    createApplicationContainer(),
+  createApplicationContainer(),
   createUserContainer(),
   createOfferContainer());
 const application = mainContainer.get<Application>(Component.Application);
