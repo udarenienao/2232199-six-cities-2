@@ -6,5 +6,7 @@ export enum Component {
     IUserRepository = 'IUserRepository',
     UserModel = 'UserModel',
     IOfferRepository = 'IOfferRepository',
-    OfferModel = 'OfferModel'
+    OfferModel = 'OfferModel',
+    CommentModel = 'CommentModel',
+    ICommentRepository = 'ICommentRepository'
   }
