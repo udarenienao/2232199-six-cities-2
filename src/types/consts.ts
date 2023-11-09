@@ -8,3 +8,9 @@ export const MIN_COUNT_ROOM = 1;
 export const MAX_COUNT_ROOM = 8;
 export const FIRST_WEEK_DAY = 1;
 export const LAST_WEEK_DAY = 7;
+
+export const RETRY_COUNT = 5;
+export const RETRY_TIMEOUT = 1000;
+
+export const DEFAULT_DB_PORT = '27017';
+export const DEFAULT_USER_PASSWORD = '123456';
