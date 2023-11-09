@@ -1,4 +1,4 @@
-openapi: 3.1.0
+openapi: 3.0.2
 info:
   title: API сервер для проекта «Шесть городов».
   description: |-
@@ -170,32 +170,32 @@ paths:
           description: Предложение с offerId не найдено
         "401":
           description: Пользователь не авторизован
-  delete:
-    tags:
-      - offers
-    summary: Удаление предложения из избранного.
-    description: Удаление предложения из избранногое.
-    security:
-      - Bearer: [ ]
-    parameters:
-      - name: offerId
-        in: query
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                offerId:
-                  type: string
-                  example: ID
+    delete:
+      tags:
+        - offers
+      summary: Удаление предложения из избранного.
+      description: Удаление предложения из избранногое.
+      security:
+        - Bearer: [ ]
+      parameters:
+        - name: offerId
+          in: query
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  offerId:
+                    type: string
+                    example: ID
 
-    responses:
-      "201":
-        description: Предложение удалено из избранного
-      "401":
-        description: Пользователь не авторизован
-      "500":
-        description: Предложение не удалено из избранного по внутренним причинам
+      responses:
+        "201":
+          description: Предложение удалено из избранного
+        "401":
+          description: Пользователь не авторизован
+        "500":
+          description: Предложение не удалено из избранного по внутренним причинам
 
   /offers/create:
     post:
@@ -405,7 +405,6 @@ components:
     Bearer:
       type: http
       scheme: bearer
-      in: header
       description: Токен для проверки авторизации
 
   schemas:
@@ -670,11 +669,11 @@ components:
 
       properties:
         latitude:
-          type: float
+          type: number
           example: 22.2233455
 
         longitude:
-          type: float
+          type: number
           example: 1.33345445
 
     changeFavorite:
