@@ -6,6 +6,7 @@ import {inject, injectable} from 'inversify';
 import {Component} from '../../types/component.js';
 import {ILog} from '../../logger/ilog.js';
 import {types} from '@typegoose/typegoose';
+import { OfferEntity } from '../offer/entity.js';
 
 @injectable()
 export default class UserService implements IUserRepository {
@@ -38,5 +39,17 @@ export default class UserService implements IUserRepository {
     }
 
     return this.create(dto, salt);
+  }
+
+  public async findById(userId: string): Promise<DocumentType<UserEntity> | null> {
+    return this.userModel.findOne({'_id': userId});
+  }
+
+  public addToFavoritesById(userId: string, offerId: string): Promise<DocumentType<OfferEntity>[] | null> {
+    return this.userModel.findByIdAndUpdate(userId, {$push: {favorite: offerId}, new: true});
+  }
+
+  public removeFromFavoritesById(userId: string, offerId: string): Promise<DocumentType<OfferEntity>[] | null> {
+    return this.userModel.findByIdAndUpdate(userId, {$pull: {favorite: offerId}, new: true});
   }
 }

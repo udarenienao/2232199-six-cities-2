@@ -15,6 +15,7 @@ import MongoClientService from '../db/mongo-client.js';
 import { getConnectionString } from '../helpers/database.js';
 import { DEFAULT_DB_PORT, DEFAULT_USER_PASSWORD } from '../types/consts.js';
 import { Offer } from '../types/offer.js';
+import { ICommentRepository } from '../modules/comment/irepository.js';
 
 export default class ImportCommand implements CliCommandInterface {
   public readonly name = '--import';
@@ -23,12 +24,14 @@ export default class ImportCommand implements CliCommandInterface {
   private databaseClient!: IDatabaseClient;
   private readonly logger: ILog;
   private salt!: string;
+  private commentService!: ICommentRepository;
+
 
   constructor() {
     this.execute = this.execute.bind(this);
 
     this.logger = new ConsoleLog();
-    this.offerRepository = new OfferRepository(this.logger, OfferModel);
+    this.offerRepository = new OfferRepository(this.logger, OfferModel, this.commentService);
     this.userRepository = new UserRepository(this.logger, UserModel);
     this.databaseClient = new MongoClientService(this.logger);
   }

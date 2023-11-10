@@ -14,3 +14,11 @@ export const RETRY_TIMEOUT = 1000;
 
 export const DEFAULT_DB_PORT = '27017';
 export const DEFAULT_USER_PASSWORD = '123456';
+
+export const COMMENTS_COUNT = 50;
+
+export const SORT_DESC = -1;
+export const SORT_ASC = 1;
+
+export const MAX_PREMIUM_OFFERS_COUNT = 3;
+export const MAX_OFFERS_COUNT = 60;
