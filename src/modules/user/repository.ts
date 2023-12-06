@@ -52,4 +52,14 @@ export default class UserService implements IUserRepository {
   public removeFromFavoritesById(userId: string, offerId: string): Promise<DocumentType<OfferEntity>[] | null> {
     return this.userModel.findByIdAndUpdate(userId, {$pull: {favorite: offerId}, new: true});
   }
+
+  public async findFavorites(userId: string): Promise<DocumentType<OfferEntity>[]> {
+    const offers = await this.userModel.findById(userId).select('favorite');
+    if (!offers) {
+      return [];
+    }
+
+    return this.userModel
+      .find({_id: { $in: offers }}).populate('offerId');
+  }
 }

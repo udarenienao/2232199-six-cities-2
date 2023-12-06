@@ -11,7 +11,6 @@ export default class CreateOfferDto {
   public previewImage!: string;
   public propertyImages!: string[];
   public premium!: boolean;
-  public favorite!: boolean;
   public rating!: number;
   public housingType!: HousingType;
   public numberOfRooms!: number;

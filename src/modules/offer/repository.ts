@@ -36,7 +36,7 @@ export default class OfferService implements IOfferRepository {
       .exec();
   }
 
-  public async find(count: number): Promise<DocumentType<OfferEntity>[]> {
+  public async find(count: number | undefined): Promise<DocumentType<OfferEntity>[]> {
     const limit = count ?? MAX_OFFERS_COUNT;
     return this.offerModel
       .find()

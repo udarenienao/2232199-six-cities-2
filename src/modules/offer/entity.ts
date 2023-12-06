@@ -44,9 +44,6 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   })
   public amenities!: Amenities[];
 
-  @prop({required: true, default: false})
-  public favorite!: boolean;
-
   @prop({
     required: true, min: [1, 'Min length for username is 1'],
     max: [10, 'Max length for username is 10']

@@ -11,5 +11,6 @@ export interface IUserRepository {
   findOrCreate(dto: CreateUserDto, salt: string): Promise<DocumentType<UserEntity>>;
   findById(userId: string): Promise<DocumentType<UserEntity> | null>;
   addToFavoritesById(userId: string, offerId: string): Promise<DocumentType<OfferEntity>[] | null>;
+  findFavorites(userId: string): Promise<DocumentType<OfferEntity>[]>
   removeFromFavoritesById(userId: string, offerId: string): Promise<DocumentType<OfferEntity>[] | null>;
 }

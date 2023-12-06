@@ -8,6 +8,8 @@ import { SettingsSchema } from '../settings/schema.js';
 import Settings from '../settings/settings.js';
 import { IDatabaseClient } from '../db/idatabase-client.js';
 import MongoClient from '../db/mongo-client.js';
+import ExceptionFilter from '../exceptions/exception-filter.js';
+import { IExceptionFilter } from '../exceptions/iexception-filter.js';
 
 export function createApplicationContainer() {
   const applicationContainer = new Container();
@@ -15,6 +17,7 @@ export function createApplicationContainer() {
   applicationContainer.bind<ILog>(Component.ILog).to(Log).inSingletonScope();
   applicationContainer.bind<ISettings<SettingsSchema>>(Component.ISettings).to(Settings).inSingletonScope();
   applicationContainer.bind<IDatabaseClient>(Component.IDatabaseClient).to(MongoClient).inSingletonScope();
+  applicationContainer.bind<IExceptionFilter>(Component.ExceptionFilter).to(ExceptionFilter).inSingletonScope();
 
   return applicationContainer;
 }
