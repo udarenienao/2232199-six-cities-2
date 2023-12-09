@@ -2,19 +2,53 @@ import 'reflect-metadata';
 import {ILog} from '../logger/ilog.js';
 import {ISettings} from '../settings/isettings.js';
 import {inject, injectable} from 'inversify';
+import express, { Express } from 'express';
 import {Component} from '../types/component.js';
 import {SettingsSchema} from '../settings/schema.js';
 import { IDatabaseClient } from '../db/idatabase-client.js';
 import { getConnectionString } from '../helpers/database.js';
+import { IController } from '../controller/icontroller.js';
+import { IExceptionFilter } from '../exceptions/iexception-filter.js';
 
 
 @injectable()
 export default class Application {
+  private expressApplication: Express;
   constructor(
     @inject(Component.ILog) private readonly logger: ILog,
     @inject(Component.ISettings) private readonly settings: ISettings<SettingsSchema>,
-    @inject(Component.IDatabaseClient) private readonly databaseClient: IDatabaseClient
-  ) {}
+    @inject(Component.IDatabaseClient) private readonly databaseClient: IDatabaseClient,
+    @inject(Component.OfferController) private readonly offerController: IController,
+    @inject(Component.UserController) private userController: IController,
+    @inject(Component.ExceptionFilter) private readonly exceptionFilter: IExceptionFilter,
+  ) {
+    this.expressApplication = express();
+  }
+
+  
+  private async _initMiddleware() {
+    this.expressApplication.use(express.json());
+  }
+
+  private async _initServer() {
+    this.logger.info('Сервер инициализируется');
+
+    const port = this.settings.get('PORT');
+    this.expressApplication.listen(port);
+
+    this.logger.info(`Сервер успешно стартовал на http://localhost:${this.settings.get('PORT')}`);
+  }
+
+  private async _initRoutes() {
+    this.logger.info('Контроллеры инициализируются');
+    this.expressApplication.use('/offers', this.offerController.router);
+    this.expressApplication.use('/users', this.userController.router);
+    this.logger.info('Контроллеры успешно инициализированы');
+  }
+
+  private async _initExceptionFilters() {
+    this.expressApplication.use(this.exceptionFilter.catch.bind(this.exceptionFilter));
+  }
 
   public async init() {
     this.logger.info(`PORT: ${this.settings.get('PORT')}`);
@@ -30,5 +64,9 @@ export default class Application {
 
     await this.databaseClient.connect(mongoUri);
     this.logger.info('the database is initialized');
+    await this._initRoutes();
+    await this._initMiddleware();
+    await this._initExceptionFilters();
+    await this._initServer();
   }
 }

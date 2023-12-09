@@ -8,5 +8,8 @@ export enum Component {
     IOfferRepository = 'IOfferRepository',
     OfferModel = 'OfferModel',
     CommentModel = 'CommentModel',
-    ICommentRepository = 'ICommentRepository'
+    ICommentRepository = 'ICommentRepository',
+    OfferController = 'OfferController',
+    UserController = 'UserController',
+    ExceptionFilter = 'ExceptionFilter'
   }
