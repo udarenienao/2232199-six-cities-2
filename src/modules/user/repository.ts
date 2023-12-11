@@ -7,6 +7,7 @@ import {Component} from '../../types/component.js';
 import {ILog} from '../../logger/ilog.js';
 import {types} from '@typegoose/typegoose';
 import { OfferEntity } from '../offer/entity.js';
+import { LoginUserDto } from './dto.js';
 
 @injectable()
 export default class UserService implements IUserRepository {
@@ -61,5 +62,19 @@ export default class UserService implements IUserRepository {
 
     return this.userModel
       .find({_id: { $in: offers }}).populate('offerId');
+  }
+
+  public async verifyUser(dto: LoginUserDto, salt: string): Promise<DocumentType<UserEntity> | null> {
+    const user = await this.findByEmail(dto.email);
+
+    if (! user) {
+      return null;
+    }
+
+    if (user.verifyPassword(dto.password, salt)) {
+      return user;
+    }
+
+    return null;
   }
 }

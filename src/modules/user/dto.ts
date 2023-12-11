@@ -4,6 +4,9 @@ import {IsEmail, IsString} from 'class-validator';
 
 export class UserDto {
   @Expose()
+  public id!: string;
+
+  @Expose()
   public username!: string;
 
   @Expose()
@@ -23,3 +26,15 @@ export class LoginUserDto {
     @IsString({message: 'Password is required.'})
     public password!: string;
 }
+
+export default class LoggedUserDto {
+  @Expose()
+  public token!: string;
+
+  @Expose()
+  public refreshToken!: string;
+
+  @Expose()
+  public email!: string;
+}
+

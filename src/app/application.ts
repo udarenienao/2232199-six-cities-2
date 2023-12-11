@@ -9,6 +9,7 @@ import { IDatabaseClient } from '../db/idatabase-client.js';
 import { getConnectionString } from '../helpers/database.js';
 import { IController } from '../controller/icontroller.js';
 import { IExceptionFilter } from '../exceptions/iexception-filter.js';
+import { AuthenticateMiddleware } from '../middlewares/auth.js';
 
 
 @injectable()
@@ -33,6 +34,8 @@ export default class Application {
       '/upload',
       express.static(this.settings.get('UPLOAD_DIRECTORY'))
     );
+    const authenticateMiddleware = new AuthenticateMiddleware(this.settings.get('JWT_SECRET'));
+    this.expressApplication.use(authenticateMiddleware.execute.bind(authenticateMiddleware));
   }
 
   private async _initServer() {

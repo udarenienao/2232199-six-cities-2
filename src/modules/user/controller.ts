@@ -9,12 +9,16 @@ import { SettingsSchema } from '../../settings/schema.ts';
 import { HttpMethod } from '../../types/http-methods.ts';
 import { HttpError } from '../../exceptions/http-error.ts';
 import { StatusCodes } from 'http-status-codes';
-import { LoginUserDto, UserDto } from './dto.ts';
+import LoggedUserDto, { LoginUserDto, UserDto } from './dto.ts';
 import CreateUserDto from './create-user.ts';
 import { plainToInstance } from 'class-transformer';
 import { ValidateDtoMiddleware } from '../../middlewares/validate-dto.ts';
 import { ValidateObjectIdMiddleware } from '../../middlewares/validate-objectid.ts';
 import { UploadFileMiddleware } from '../../middlewares/upload-file.ts';
+import { PrivateRouteMiddleware } from '../../middlewares/private-route.ts';
+import { createJWT } from '../../helpers/auth.ts';
+import { JWT_ALGORITHM } from '../../types/consts.ts';
+import { BLACK_LIST_TOKENS } from '../../middlewares/auth.ts';
 
 
 @injectable()
@@ -34,6 +38,7 @@ export default class UserController extends Controller {
       middlewares: [
         new ValidateDtoMiddleware(CreateUserDto)
       ]});
+
     this.addRoute({
       path: '/login',
       method: HttpMethod.Post,
@@ -41,7 +46,21 @@ export default class UserController extends Controller {
       middlewares: [
         new ValidateDtoMiddleware(LoginUserDto)
       ]});
-    this.addRoute({path: '/logout', method: HttpMethod.Post, handler: this.logout});
+
+    this.addRoute({
+      path: '/login',
+      method: HttpMethod.Get,
+      handler: this.checkAuthenticate,
+    });
+
+    this.addRoute({
+      path: '/logout',
+      method: HttpMethod.Post,
+      handler: this.logout,
+      middlewares: [
+        new PrivateRouteMiddleware()
+      ]});
+
     this.addRoute({
       path: '/:userId/avatar',
       method: HttpMethod.Post,
@@ -71,7 +90,7 @@ export default class UserController extends Controller {
   }
 
   public async login(
-    {body}: Request<Record<string, unknown>, Record<string, unknown>, LoginUserDto>,
+    {body, user}: Request<Record<string, unknown>, Record<string, unknown>, LoginUserDto>,
     _res: Response,
   ): Promise<void> {
     const existsUser = await this.userService.findByEmail(body.email);
@@ -84,19 +103,61 @@ export default class UserController extends Controller {
       );
     }
 
-    throw new HttpError(
-      StatusCodes.NOT_IMPLEMENTED,
-      'Not implemented',
-      'UserController',
+    const accessToken = await createJWT(
+      JWT_ALGORITHM,
+      this.configService.get('JWT_SECRET'),
+      {
+        email: user.email,
+        id: user.id
+      },
+      300
     );
+
+    const refreshToken = await createJWT(
+      JWT_ALGORITHM,
+      this.configService.get('JWT_SECRET'),
+      {
+        email: user.email,
+        id: user.id
+      },
+      7200
+    );
+
+    this.ok(_res, plainToInstance(LoggedUserDto, {
+      email: user.email,
+      accessToken: accessToken,
+      refreshToken: refreshToken
+    }, { excludeExtraneousValues: true }));
   }
 
   public async logout(_req: Request, _res: Response): Promise<void> {
-    throw new HttpError(
-      StatusCodes.NOT_IMPLEMENTED,
-      'Not implemented',
-      'UserController',
-    );
+    const [, token] = String(_req.headers.authorization?.split(' '));
+
+    if (!_req.user) {
+      throw new HttpError(
+        StatusCodes.UNAUTHORIZED,
+        'Unauthorized',
+        'UserController'
+      );
+    }
+
+    BLACK_LIST_TOKENS.add(token);
+
+    this.noContent(_res, {token});
+  }
+
+  public async checkAuthenticate({user: {email}}: Request, res: Response) {
+    const foundedUser = await this.userService.findByEmail(email);
+
+    if (!foundedUser) {
+      throw new HttpError(
+        StatusCodes.UNAUTHORIZED,
+        'Unauthorized',
+        'UserController'
+      );
+    }
+
+    this.ok(res, plainToInstance(LoggedUserDto, foundedUser, { excludeExtraneousValues: true }));
   }
 
   public async uploadAvatar(req: Request, res: Response) {
