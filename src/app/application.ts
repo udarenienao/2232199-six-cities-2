@@ -29,6 +29,10 @@ export default class Application {
 
   private async _initMiddleware() {
     this.expressApplication.use(express.json());
+    this.expressApplication.use(
+      '/upload',
+      express.static(this.settings.get('UPLOAD_DIRECTORY'))
+    );
   }
 
   private async _initServer() {
