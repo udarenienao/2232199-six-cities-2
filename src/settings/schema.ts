@@ -11,6 +11,7 @@ export type SettingsSchema = {
   DB_PASSWORD: string;
   DB_PORT: string;
   DB_NAME: string;
+  UPLOAD_DIRECTORY: string;
 }
 
 export const settingsSchema = convict<SettingsSchema>({
@@ -55,5 +56,11 @@ export const settingsSchema = convict<SettingsSchema>({
     format: String,
     env: 'DB_NAME',
     default: 'db'
+  },
+  UPLOAD_DIRECTORY: {
+    doc: 'Папка для загрузки файлов',
+    format: String,
+    env: 'UPLOAD_DIRECTORY',
+    default: null
   }
 });

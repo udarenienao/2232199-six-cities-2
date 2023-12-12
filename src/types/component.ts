@@ -11,5 +11,6 @@ export enum Component {
     ICommentRepository = 'ICommentRepository',
     OfferController = 'OfferController',
     UserController = 'UserController',
-    ExceptionFilter = 'ExceptionFilter'
+    ExceptionFilter = 'ExceptionFilter',
+    CommentController = 'CommentController',
   }

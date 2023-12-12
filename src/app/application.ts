@@ -21,13 +21,18 @@ export default class Application {
     @inject(Component.OfferController) private readonly offerController: IController,
     @inject(Component.UserController) private userController: IController,
     @inject(Component.ExceptionFilter) private readonly exceptionFilter: IExceptionFilter,
+    @inject(Component.CommentController) private readonly commentController: IController,
   ) {
     this.expressApplication = express();
   }
 
-  
+
   private async _initMiddleware() {
     this.expressApplication.use(express.json());
+    this.expressApplication.use(
+      '/upload',
+      express.static(this.settings.get('UPLOAD_DIRECTORY'))
+    );
   }
 
   private async _initServer() {
@@ -36,13 +41,14 @@ export default class Application {
     const port = this.settings.get('PORT');
     this.expressApplication.listen(port);
 
-    this.logger.info(`Сервер успешно стартовал на http://localhost:${this.settings.get('PORT')}`);
+    this.logger.info(`Сервер успешно стартовал на ${port} порту`);
   }
 
   private async _initRoutes() {
     this.logger.info('Контроллеры инициализируются');
     this.expressApplication.use('/offers', this.offerController.router);
     this.expressApplication.use('/users', this.userController.router);
+    this.expressApplication.use('/comments', this.commentController.router);
     this.logger.info('Контроллеры успешно инициализированы');
   }
 

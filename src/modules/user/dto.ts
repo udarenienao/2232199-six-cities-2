@@ -1,4 +1,6 @@
 import {Expose} from 'class-transformer';
+import { UserType } from '../../types/user.ts';
+import {IsEmail, IsString} from 'class-validator';
 
 export class UserDto {
   @Expose()
@@ -9,9 +11,15 @@ export class UserDto {
 
   @Expose()
   public avatar!: string;
+
+  @Expose()
+  public type!: UserType;
 }
 
 export class LoginUserDto {
-    public email!: string;
+    @IsEmail({}, {message: 'Email must be valid.'})
+  public email!: string;
+
+    @IsString({message: 'Password is required.'})
     public password!: string;
-  }
+}
