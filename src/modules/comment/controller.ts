@@ -11,6 +11,7 @@ import { plainToInstance } from 'class-transformer';
 import CommentDto from './dto.ts';
 import { ValidateDtoMiddleware } from '../../middlewares/validate-dto.ts';
 import { DocumentExistsMiddleware } from '../../middlewares/document-exists.ts';
+import { PrivateRouteMiddleware } from '../../middlewares/private-route.ts';
 
 
 @injectable()
@@ -27,14 +28,19 @@ export default class CommentController extends Controller {
       method: HttpMethod.Post,
       handler: this.create,
       middlewares: [
+        new PrivateRouteMiddleware(),
         new ValidateDtoMiddleware(CreateCommentDto),
         new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')
       ]
     });
   }
 
-  public async create({body}: Request<object, object, CreateCommentDto>, res: Response): Promise<void> {
-    const comment = await this.commentService.createForOffer(body);
+  public async create({body, params, user}: Request<object, object, CreateCommentDto>, res: Response): Promise<void> {
+    const comment = await this.commentService.createForOffer({
+      ...body,
+      offerId: params.offerId,
+      userId: user.id
+    });
     this.created(res, plainToInstance(CommentDto, comment, { excludeExtraneousValues: true }));
   }
 }
