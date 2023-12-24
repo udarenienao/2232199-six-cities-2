@@ -34,6 +34,10 @@ export default class Application {
       '/upload',
       express.static(this.settings.get('UPLOAD_DIRECTORY'))
     );
+    this.expressApplication.use(
+      '/static',
+      express.static(this.settings.get('STATIC_DIRECTORY_PATH'))
+    );
     const authenticateMiddleware = new AuthenticateMiddleware(this.settings.get('JWT_SECRET'));
     this.expressApplication.use(authenticateMiddleware.execute.bind(authenticateMiddleware));
   }

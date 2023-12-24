@@ -1,6 +1,6 @@
 import {Expose} from 'class-transformer';
 import { UserType } from '../../types/user.ts';
-import {IsEmail, IsString} from 'class-validator';
+import {IsEmail, IsString, IsOptional} from 'class-validator';
 
 export class UserDto {
   @Expose()
@@ -27,7 +27,7 @@ export class LoginUserDto {
     public password!: string;
 }
 
-export default class LoggedUserDto {
+export class LoggedUserDto {
   @Expose()
   public token!: string;
 
@@ -36,5 +36,21 @@ export default class LoggedUserDto {
 
   @Expose()
   public email!: string;
+}
+
+export class UpdateUserDto {
+  @IsOptional()
+  public email?: string;
+
+  @IsOptional()
+  public username?: string;
+
+  @IsOptional()
+  public avatar?: string;
+}
+
+export class UploadUserAvatarResponse {
+  @Expose()
+  public filepath!: string;
 }
 

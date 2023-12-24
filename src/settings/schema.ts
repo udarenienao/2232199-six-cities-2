@@ -13,6 +13,8 @@ export type SettingsSchema = {
   DB_NAME: string;
   UPLOAD_DIRECTORY: string;
   JWT_SECRET: string;
+  HOST: string;
+  STATIC_DIRECTORY_PATH: string;
 }
 
 export const settingsSchema = convict<SettingsSchema>({
@@ -65,9 +67,21 @@ export const settingsSchema = convict<SettingsSchema>({
     default: null
   },
   JWT_SECRET: {
-    doc: 'Secret for sign JWT',
+    doc: 'Секрет для подписи JWT',
     format: String,
     env: 'JWT_SECRET',
     default: null
-  }
+  },
+  HOST: {
+    doc: 'Хост для старта сервиса',
+    format: String,
+    env: 'HOST',
+    default: 'localhost'
+  },
+  STATIC_DIRECTORY_PATH: {
+    doc: 'Путь к директории со статическими ресурсами',
+    format: String,
+    env: 'STATIC_DIRECTORY_PATH',
+    default: 'static'
+  },
 });

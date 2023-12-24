@@ -90,7 +90,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop({type: () => Boolean, required: true, default: false})
   public premium!: boolean;
 
-  @prop({type: () => String, required: true, match: [/.*\.(?:jpg|png)/, 'Avatar must be jpg or png']})
+  @prop({type: () => String, required: true, match: [/.*\.(?:jpg|png)/, 'Image must be jpg or png']})
   public previewImage!: string;
 
   @prop({type: () => Date, required: true})

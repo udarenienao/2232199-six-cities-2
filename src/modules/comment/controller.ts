@@ -12,7 +12,13 @@ import CommentDto from './dto.ts';
 import { ValidateDtoMiddleware } from '../../middlewares/validate-dto.ts';
 import { DocumentExistsMiddleware } from '../../middlewares/document-exists.ts';
 import { PrivateRouteMiddleware } from '../../middlewares/private-route.ts';
+import { ISettings } from '../../settings/isettings.ts';
+import { SettingsSchema } from '../../settings/schema.ts';
+import {ParamsDictionary} from 'express-serve-static-core';
 
+type ParamsOffer = {
+  offerId: string;
+} | ParamsDictionary
 
 @injectable()
 export default class CommentController extends Controller {
@@ -20,8 +26,9 @@ export default class CommentController extends Controller {
     @inject(Component.ILog) protected readonly logger: ILog,
     @inject(Component.ICommentRepository) private readonly commentService: ICommentRepository,
     @inject(Component.IOfferRepository) private readonly offerService: IOfferRepository,
+    @inject(Component.ISettings) settings: ISettings<SettingsSchema>
   ) {
-    super(logger);
+    super(logger, settings);
 
     this.addRoute({
       path: '/:offerId',
@@ -33,14 +40,29 @@ export default class CommentController extends Controller {
         new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')
       ]
     });
+
+    this.addRoute({
+      path: '/:offerId',
+      method: HttpMethod.Get,
+      handler: this.index,
+      middlewares: [
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')
+      ]
+    });
   }
 
-  public async create({body, params, user}: Request<object, object, CreateCommentDto>, res: Response): Promise<void> {
+  public async index({params}: Request<ParamsOffer, object, CreateCommentDto>, res: Response): Promise<void> {
+    const comments = await this.commentService.findByOfferId(params.offerId);
+    this.ok(res, plainToInstance(CommentDto, comments, { excludeExtraneousValues: true }));
+  }
+
+  public async create({body, params, user}: Request<ParamsOffer, object, CreateCommentDto>, res: Response): Promise<void> {
     const comment = await this.commentService.createForOffer({
       ...body,
       offerId: params.offerId,
       userId: user.id
     });
-    this.created(res, plainToInstance(CommentDto, comment, { excludeExtraneousValues: true }));
+    const result = await this.commentService.findById(comment.id);
+    this.created(res, plainToInstance(CommentDto, result, { excludeExtraneousValues: true }));
   }
 }
