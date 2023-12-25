@@ -1,6 +1,7 @@
-import typegoose, {defaultClasses, getModelForClass} from '@typegoose/typegoose';
+import typegoose, {Ref, defaultClasses, getModelForClass} from '@typegoose/typegoose';
 import {User, UserType} from '../../types/user.js';
 import * as crypto from 'node:crypto';
+import { OfferEntity } from '../offer/entity.js';
 const {prop, modelOptions} = typegoose;
 
 export interface UserEntity extends defaultClasses.Base {
@@ -32,6 +33,9 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
     enum: UserType
   })
   public type: UserType;
+
+  @prop({ required: true, ref: 'OfferEntity', default: [] })
+  public favorite!: Ref<OfferEntity>[];
 
   @prop({
     type: () => String,

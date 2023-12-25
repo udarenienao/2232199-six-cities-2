@@ -15,4 +15,6 @@ export interface IOfferRepository extends IDocumentExists{
   incComment(offerId: string): Promise<DocumentType<OfferEntity> | null>;
   exists(documentId: string): Promise<boolean>;
   updateRating(offerId: string, rating: number): Promise<void>;
+  addImage(offerId: string, image?: string): Promise<void>;
+  removeImage(offerId: string, image?: string): Promise<void>;
 }

@@ -20,13 +20,12 @@ export default class CommentService implements ICommentRepository {
     const offerId = dto.offerId;
     await this.offerService.incComment(offerId);
 
-    const allRating = this.commentModel.find({offerId}).select('rating');
     const offer = await this.offerService.findById(offerId);
 
     const count = offer?.numberOfComments ?? 1;
-    const newRating = allRating['rating'] / (count);
+    const newRating = (offer?.rating ?? 0 + dto.rating) / count;
     await this.offerService.updateRating(offerId, newRating);
-    return comment.populate('authorId');
+    return comment;
   }
 
   public async findByOfferId(offerId: string): Promise<DocumentType<CommentEntity>[]> {
@@ -34,7 +33,8 @@ export default class CommentService implements ICommentRepository {
       .find({offerId})
       .sort({createdAt: SORT_DESC})
       .populate('authorId')
-      .limit(COMMENTS_COUNT);
+      .limit(COMMENTS_COUNT)
+      .exec();
   }
 
   public async deleteByOfferId(offerId: string): Promise<number> {
@@ -43,5 +43,12 @@ export default class CommentService implements ICommentRepository {
       .exec();
 
     return result.deletedCount;
+  }
+
+  public findById(commentId: string): Promise<DocumentType<CommentEntity> | null> {
+    return this.commentModel
+      .findById(commentId)
+      .populate('userId')
+      .exec();
   }
 }

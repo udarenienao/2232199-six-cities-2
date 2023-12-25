@@ -9,7 +9,7 @@ import { SettingsSchema } from '../../settings/schema.ts';
 import { HttpMethod } from '../../types/http-methods.ts';
 import { HttpError } from '../../exceptions/http-error.ts';
 import { StatusCodes } from 'http-status-codes';
-import LoggedUserDto, { LoginUserDto, UserDto } from './dto.ts';
+import { LoggedUserDto, LoginUserDto, UploadUserAvatarResponse, UserDto } from './dto.ts';
 import CreateUserDto from './create-user.ts';
 import { plainToInstance } from 'class-transformer';
 import { ValidateDtoMiddleware } from '../../middlewares/validate-dto.ts';
@@ -25,9 +25,9 @@ import { BLACK_LIST_TOKENS } from '../../middlewares/auth.ts';
 export default class UserController extends Controller {
   constructor(@inject(Component.ILog) logger: ILog,
               @inject(Component.IUserRepository) private readonly userService: IUserRepository,
-              @inject(Component.ISettings) private readonly configService: ISettings<SettingsSchema>
+              @inject(Component.ISettings) protected readonly settings: ISettings<SettingsSchema>
   ) {
-    super(logger);
+    super(logger, settings);
 
     this.logger.info('Register routes for UserController…');
 
@@ -67,7 +67,7 @@ export default class UserController extends Controller {
       handler: this.uploadAvatar,
       middlewares: [
         new ValidateObjectIdMiddleware('userId'),
-        new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'avatar'),
+        new UploadFileMiddleware(this.settings.get('UPLOAD_DIRECTORY'), 'avatar'),
       ]
     });
   }
@@ -85,7 +85,7 @@ export default class UserController extends Controller {
       );
     }
 
-    const result = await this.userService.create(body, this.configService.get('SALT'));
+    const result = await this.userService.create(body, this.settings.get('SALT'));
     this.created(res, plainToInstance(UserDto, result, { excludeExtraneousValues: true }));
   }
 
@@ -105,7 +105,7 @@ export default class UserController extends Controller {
 
     const accessToken = await createJWT(
       JWT_ALGORITHM,
-      this.configService.get('JWT_SECRET'),
+      this.settings.get('JWT_SECRET'),
       {
         email: user.email,
         id: user.id
@@ -115,7 +115,7 @@ export default class UserController extends Controller {
 
     const refreshToken = await createJWT(
       JWT_ALGORITHM,
-      this.configService.get('JWT_SECRET'),
+      this.settings.get('JWT_SECRET'),
       {
         email: user.email,
         id: user.id
@@ -161,8 +161,10 @@ export default class UserController extends Controller {
   }
 
   public async uploadAvatar(req: Request, res: Response) {
-    this.created(res, {
-      filepath: req.file?.path
-    });
+    const {userId} = req.params;
+    const uploadFile = {avatar: req.file?.filename};
+    await this.userService.updateById(userId, uploadFile);
+
+    this.created(res, plainToInstance(UploadUserAvatarResponse, uploadFile, { excludeExtraneousValues: true }));
   }
 }

@@ -6,4 +6,5 @@ export interface ICommentRepository {
   createForOffer(dto: CreateCommentDto): Promise<DocumentType<CommentEntity>>;
   findByOfferId(offerId: string): Promise<DocumentType<CommentEntity>[]>;
   deleteByOfferId(offerId: string): Promise<number | null>;
+  findById(commentId: string): Promise<DocumentType<CommentEntity> | null>
 }

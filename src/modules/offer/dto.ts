@@ -8,7 +8,7 @@ export class OfferDto {
   @Expose()
     name!: string;
 
-  @Expose()
+  @Expose({ name: 'createdAt'})
     publicationDate!: Date;
 
   @Expose()
@@ -40,7 +40,7 @@ export class FullOfferDto {
   @Expose()
     description!: string;
 
-  @Expose()
+  @Expose({ name: 'createdAt'})
     publicationDate!: Date;
 
   @Expose()
@@ -90,7 +90,7 @@ export class ShortOfferDto{
   @Expose()
     name!: string;
 
-  @Expose()
+  @Expose({ name: 'createdAt'})
     publicationDate!: Date;
 
   @Expose()
@@ -128,7 +128,7 @@ export class FavouriteShortOfferDto{
   @Expose()
     description!: string;
 
-  @Expose()
+  @Expose({ name: 'createdAt'})
     publicationDate!: Date;
 
   @Expose()
@@ -153,4 +153,9 @@ export class FavouriteShortOfferDto{
 
   @Expose()
     numberOfComments!: number;
+}
+
+export class UploadImageResponse {
+  @Expose()
+  public image!: string;
 }

@@ -24,3 +24,12 @@ export const MAX_PREMIUM_OFFERS_COUNT = 3;
 export const MAX_OFFERS_COUNT = 60;
 
 export const JWT_ALGORITHM = 'HS256';
+
+export const DEFAULT_AVATAR_FILE_NAME = 'default-avatar.jpg';
+export const DEFAULT_STATIC_IMAGES = [
+  'default-avatar.jpg',
+];
+
+export const STATIC_RESOURCE_FIELDS = [
+  'avatar', 'previewImage', 'images'
+];
