@@ -1,19 +1,19 @@
 import {Request, Response} from 'express';
 import {inject, injectable} from 'inversify';
-import { Controller } from '../../controller/controller.ts';
-import { ILog } from '../../logger/ilog.ts';
-import { ICommentRepository } from './irepository.ts';
-import { IOfferRepository } from '../offer/irepository.ts';
-import { Component } from '../../types/component.ts';
-import { HttpMethod } from '../../types/http-methods.ts';
-import CreateCommentDto from './create-comment.ts';
+import { Controller } from '../../controller/controller.js';
+import { ILog } from '../../logger/ilog.js';
+import { ICommentRepository } from './irepository.js';
+import { IOfferRepository } from '../offer/irepository.js';
+import { Component } from '../../types/component.js';
+import { HttpMethod } from '../../types/http-methods.js';
+import CreateCommentDto from './create-comment.js';
 import { plainToInstance } from 'class-transformer';
-import CommentDto from './dto.ts';
-import { ValidateDtoMiddleware } from '../../middlewares/validate-dto.ts';
-import { DocumentExistsMiddleware } from '../../middlewares/document-exists.ts';
-import { PrivateRouteMiddleware } from '../../middlewares/private-route.ts';
-import { ISettings } from '../../settings/isettings.ts';
-import { SettingsSchema } from '../../settings/schema.ts';
+import CommentDto from './dto.js';
+import { ValidateDtoMiddleware } from '../../middlewares/validate-dto.js';
+import { DocumentExistsMiddleware } from '../../middlewares/document-exists.js';
+import { PrivateRouteMiddleware } from '../../middlewares/private-route.js';
+import { ISettings } from '../../settings/isettings.js';
+import { SettingsSchema } from '../../settings/schema.js';
 import {ParamsDictionary} from 'express-serve-static-core';
 
 type ParamsOffer = {

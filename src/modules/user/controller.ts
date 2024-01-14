@@ -1,24 +1,24 @@
 import { inject, injectable } from 'inversify';
 import { Request, Response } from 'express';
-import { ILog } from '../../logger/ilog.ts';
-import { Controller } from '../../controller/controller.ts';
-import { Component } from '../../types/component.ts';
-import { IUserRepository } from './irepository.ts';
-import { ISettings } from '../../settings/isettings.ts';
-import { SettingsSchema } from '../../settings/schema.ts';
-import { HttpMethod } from '../../types/http-methods.ts';
-import { HttpError } from '../../exceptions/http-error.ts';
+import { ILog } from '../../logger/ilog.js';
+import { Controller } from '../../controller/controller.js';
+import { Component } from '../../types/component.js';
+import { IUserRepository } from './irepository.js';
+import { ISettings } from '../../settings/isettings.js';
+import { SettingsSchema } from '../../settings/schema.js';
+import { HttpMethod } from '../../types/http-methods.js';
+import { HttpError } from '../../exceptions/http-error.js';
 import { StatusCodes } from 'http-status-codes';
-import { LoggedUserDto, LoginUserDto, UploadUserAvatarResponse, UserDto } from './dto.ts';
-import CreateUserDto from './create-user.ts';
+import { LoggedUserDto, LoginUserDto, UploadUserAvatarResponse, UserDto } from './dto.js';
+import CreateUserDto from './create-user.js';
 import { plainToInstance } from 'class-transformer';
-import { ValidateDtoMiddleware } from '../../middlewares/validate-dto.ts';
-import { ValidateObjectIdMiddleware } from '../../middlewares/validate-objectid.ts';
-import { UploadFileMiddleware } from '../../middlewares/upload-file.ts';
-import { PrivateRouteMiddleware } from '../../middlewares/private-route.ts';
-import { createJWT } from '../../helpers/auth.ts';
-import { JWT_ALGORITHM } from '../../types/consts.ts';
-import { BLACK_LIST_TOKENS } from '../../middlewares/auth.ts';
+import { ValidateDtoMiddleware } from '../../middlewares/validate-dto.js';
+import { ValidateObjectIdMiddleware } from '../../middlewares/validate-objectid.js';
+import { UploadFileMiddleware } from '../../middlewares/upload-file.js';
+import { PrivateRouteMiddleware } from '../../middlewares/private-route.js';
+import { createJWT } from '../../helpers/auth.js';
+import { JWT_ALGORITHM } from '../../types/consts.js';
+import { BLACK_LIST_TOKENS } from '../../middlewares/auth.js';
 
 
 @injectable()

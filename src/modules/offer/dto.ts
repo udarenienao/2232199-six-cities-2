@@ -1,8 +1,8 @@
 import { Expose } from 'class-transformer';
-import { City } from '../../types/city.ts';
-import { HousingType } from '../../types/housing-type.ts';
-import { Amenities } from '../../types/amenities.ts';
-import { Coordinates } from '../../types/coordinates.ts';
+import { City } from '../../types/city.js';
+import { HousingType } from '../../types/housing-type.js';
+import { Amenities } from '../../types/amenities.js';
+import { Coordinates } from '../../types/coordinates.js';
 
 export class OfferDto {
   @Expose()
