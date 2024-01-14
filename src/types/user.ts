@@ -1,7 +1,7 @@
 
 export enum UserType {
-    simple,
-    pro
+    simple = 'simple',
+    pro = 'pro'
   }
 
 export type User = {

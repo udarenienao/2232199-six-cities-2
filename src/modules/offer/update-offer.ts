@@ -67,9 +67,9 @@ export default class UpdateOfferDto {
   @IsArray({message: 'field Amenities must be an array'})
   @IsEnum(Amenities, {each: true, message: 'type must be one of the Amenities'})
   @ArrayNotEmpty({message: 'There should be at least 1 Amenitiy'})
-  public amenities!: Amenities[];
+  public amenities?: Amenities[];
 
   @IsOptional()
   @IsObject({message: 'There should be object Coordinates'})
-  public coordinates!: Coordinates;
+  public coordinates?: Coordinates;
 }

@@ -1,5 +1,5 @@
 import {Expose} from 'class-transformer';
-import { UserType } from '../../types/user.ts';
+import { UserType } from '../../types/user.js';
 import {IsEmail, IsString, IsOptional} from 'class-validator';
 
 export class UserDto {
